@@ -3,125 +3,131 @@ import 'MyHomePage.dart';
 import 'Login.dart';
 
 class RegisterPage extends StatefulWidget {
-    const RegisterPage({Key? key, required this.title}) : super(key: key);
+  const RegisterPage({Key? key, required this.title}) : super(key: key);
 
-    final String title;
+  final String title;
 
-    @override
-    State<RegisterPage> createState() => _RegisterPageState();
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController usernameController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController phoneController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
-    @override
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blueGrey.shade900,
         title: Text(
-            widget.title,
-            style: TextStyle(color: Colors.yellow.shade800),
+          widget.title,
+          style: TextStyle(color: Colors.yellow.shade800),
         ),
-        ),
-        body: Center(
+      ),
+      body: Center(
         child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               // Campos de entrada para el registro
-                TextFormField(
+              TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
-                    labelText: 'Nombre Completo',
+                  labelText: 'Nombre Completo',
                 ),
-                ),
-                TextFormField(
+              ),
+              TextFormField(
                 controller: usernameController,
                 decoration: InputDecoration(
-                    labelText: 'Usuario',
+                  labelText: 'Usuario',
                 ),
-                ),
-                TextFormField(
+              ),
+              TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(
-                    labelText: 'Correo electrónico',
+                  labelText: 'Correo electrónico',
                 ),
-                ),
-                TextFormField(
+              ),
+              TextFormField(
                 controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                    labelText: 'Contraseña',
+                  labelText: 'Contraseña',
                 ),
-                ),
-                TextFormField(
+              ),
+              TextFormField(
                 controller: phoneController,
                 decoration: InputDecoration(
-                    labelText: 'Número de Celular',
+                  labelText: 'Número de Celular',
                 ),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
                 onPressed: () {
                   // Validar que no haya campos vacíos
-                    if (nameController.text.isEmpty ||
-                        usernameController.text.isEmpty ||
-                        emailController.text.isEmpty ||
-                        passwordController.text.isEmpty ||
-                        phoneController.text.isEmpty) {
+                  if (nameController.text.isEmpty ||
+                      usernameController.text.isEmpty ||
+                      emailController.text.isEmpty ||
+                      passwordController.text.isEmpty ||
+                      phoneController.text.isEmpty) {
                     // Mostrar un mensaje de error si hay campos vacíos
                     ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                      SnackBar(
                         content: Text('Por favor, completa todos los campos.'),
                         backgroundColor: Colors.red,
-                    ),
+                      ),
                     );
-                    } else {
+                  } else {
                     // Permitir la creación de la cuenta
                     // Aquí puedes agregar lógica adicional según tus necesidades
                     // En este ejemplo, simplemente navega a la página de inicio
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
+                      context,
+                      MaterialPageRoute(
                         builder: (context) => const MyHomePage(title: 'Inicio'),
-                        ),
+                      ),
                     );
-                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blueGrey.shade900, // Color del fondo del botón
+                  primary:
+                      Colors.blueGrey.shade900, // Color del fondo del botón
                 ),
-                child: Text('Crear Cuenta', style: TextStyle(color: Colors.yellow.shade800), 
+                child: Text(
+                  'Crear Cuenta',
+                  style: TextStyle(color: Colors.yellow.shade800),
                 ),
-                ),
-                SizedBox(height: 16),
-                OutlinedButton(
+              ),
+              SizedBox(height: 16),
+              OutlinedButton(
                 onPressed: () {
                   // Navegar de regreso a la página de inicio de sesión
-                    Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const LoginPage(title: 'Login'),
+                      builder: (context) => const LoginPage(title: 'Login'),
                     ),
-                    );
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blueGrey.shade900, // Color del fondo del botón
+                  primary:
+                      Colors.blueGrey.shade900, // Color del fondo del botón
                 ),
-                child: Text('Regresar', style: TextStyle(color: Colors.yellow.shade800), 
+                child: Text(
+                  'Regresar',
+                  style: TextStyle(color: Colors.yellow.shade800),
                 ),
-                ),
+              ),
             ],
-            ),
+          ),
         ),
-        ),
+      ),
     );
-    }
+  }
 }

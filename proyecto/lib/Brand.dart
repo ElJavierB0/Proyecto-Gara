@@ -1,51 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'Auto.dart';
-import 'package:proyecto/models/Autos.dart';
 import 'package:proyecto/models/Brand.dart';
+import 'package:proyecto/models/Category.dart';
+import 'Autos.dart';
 import 'dart:async';
 import 'dart:convert';
 
-Future<List<Autos>> fetchAutos() async {
-  final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/Cars'));
+Future<List<Brand>> fetchBrands() async {
+  final response =
+      await http.get(Uri.parse('http://127.0.0.1:8000/api/Brands'));
 
   if (response.statusCode == 200) {
     Iterable jsonResponse = jsonDecode(response.body);
-    List<Autos> autos =
-        jsonResponse.map((data) => Autos.fromJson(data)).toList();
-    return autos;
+    List<Brand> brands =
+        jsonResponse.map((data) => Brand.fromJson(data)).toList();
+    return brands;
   } else {
-    throw Exception('Failed to load Autos');
+    throw Exception('Failed to load Brands');
   }
 }
 
-Future<Brand> fetchBrand(int brandId) async {
-  final response =
-      await http.get(Uri.parse('http://127.0.0.1:8000/api/Brands/$brandId'));
+Future<Category> fetchCategory(int categoryId) async {
+  final response = await http
+      .get(Uri.parse('http://127.0.0.1:8000/api/Categories/$categoryId'));
 
   if (response.statusCode == 200) {
-    Map<String, dynamic> brandData = jsonDecode(response.body);
-    return Brand.fromJson(brandData);
+    Map<String, dynamic> categoryData = jsonDecode(response.body);
+    return Category.fromJson(categoryData);
   } else {
-    throw Exception('Failed to load Brand');
+    throw Exception('Failed to load category');
   }
 }
 
-class AutosPage extends StatefulWidget {
-  const AutosPage({Key? key, required this.title}) : super(key: key);
+class BrandPage extends StatefulWidget {
+  const BrandPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  State<AutosPage> createState() => _AutosPageState();
+  State<BrandPage> createState() => _BrandPageState();
 }
 
-class _AutosPageState extends State<AutosPage> {
-  late Future<List<Autos>> futureAutos;
+class _BrandPageState extends State<BrandPage> {
+  late Future<List<Brand>> futureBrands;
 
   @override
   void initState() {
     super.initState();
-    futureAutos = fetchAutos();
+    futureBrands = fetchBrands();
   }
 
   @override
@@ -59,8 +60,8 @@ class _AutosPageState extends State<AutosPage> {
               color: Colors.yellow.shade800, fontWeight: FontWeight.bold),
         ),
       ),
-      body: FutureBuilder<List<Autos>>(
-        future: futureAutos,
+      body: FutureBuilder<List<Brand>>(
+        future: futureBrands,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
@@ -84,10 +85,7 @@ class _AutosPageState extends State<AutosPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AutoPage(
-                        autoId: snapshot.data![index].id,
-                        title: widget.title,
-                      ),
+                      builder: (context) => const AutosPage(title: 'Autos'),
                     ),
                   );
                 },
@@ -128,29 +126,29 @@ class _AutosPageState extends State<AutosPage> {
                               ),
                             ],
                           ),
-                          FutureBuilder<Brand>(
-                            future: fetchBrand(snapshot.data![index].id),
-                            builder: (context, brandsSnapshot) {
-                              if (brandsSnapshot.connectionState ==
+                          FutureBuilder<Category>(
+                            future: fetchCategory(snapshot.data![index].id),
+                            builder: (context, categorySnapshot) {
+                              if (categorySnapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
-                              } else if (brandsSnapshot.hasError) {
+                              } else if (categorySnapshot.hasError) {
                                 return Text(
-                                  '${brandsSnapshot.error}',
+                                  '${categorySnapshot.error}',
                                   style: TextStyle(color: textColor),
                                 );
                               } else {
                                 return Row(
                                   children: [
                                     Text(
-                                      'Marca: ',
+                                      'Categoria: ',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: textColor,
                                       ),
                                     ),
                                     Text(
-                                      '${brandsSnapshot.data!.Nombre}',
+                                      '${categorySnapshot.data!.Tipo}',
                                       style: TextStyle(color: textColor),
                                     ),
                                   ],
@@ -172,21 +170,6 @@ class _AutosPageState extends State<AutosPage> {
                           ),
                           Text(
                             '${snapshot.data![index].Nombre}',
-                            style: TextStyle(color: textColor),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Estado: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
-                          ),
-                          Text(
-                            '${snapshot.data![index].Estado}',
                             style: TextStyle(color: textColor),
                           ),
                         ],

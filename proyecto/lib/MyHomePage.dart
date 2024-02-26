@@ -1,173 +1,145 @@
 import 'package:flutter/material.dart';
-import 'Admins.dart';
-import 'Brands.dart';
-import 'Cars.dart';
-import 'Categories.dart';
-import 'Employees.dart';
-import 'Records.dart';
-import 'Remplacements.dart';
-import 'Jobs.dart';
-import 'Users.dart';
-import 'Services.dart';
-import 'Modificaciones.dart';
-import 'Reparaciones.dart';
-import 'Autos.dart';
+import 'Car.dart';
+import 'Remplacement.dart';
+import 'Job.dart';
 import 'Login.dart';
+import 'User.dart';
 
+void main() {
+  runApp(MyApp());
+}
 
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Tu Aplicación',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(title: 'Inicio'),
+    );
+  }
+}
 
 class MyHomePage extends StatefulWidget {
-    const MyHomePage({super.key, required this.title});
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-    final String title;
+  final String title;
 
-    @override
-    State<MyHomePage> createState() => _MyHomePageState();
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-    int _counter = 0;
-
-    void _incrementCounter() {
-    setState(() {
-        _counter++;
-    });
-    }
-
-    @override
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.blueGrey.shade900, // Color del fondo
-        title: Text(
-            widget.title,
-            style: TextStyle(color: Colors.yellow.shade800), // Color del texto
-        ),
-        ),
-        body: Center(
-            child: ListView(
-            padding: const EdgeInsets.all(8),
-            children: <Widget>[
-                InkWell(
-                onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => const JobsPage(title: 'Trabajos'),
-                    ),
-                );
-                },
-                child: Container(
-                height: 150, 
-                color: Colors.cyan.shade800,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Image.asset(
-                        'Taller.jpeg',
-                        width: MediaQuery.of(context).size.width, 
-                        height: 115, 
-                        fit: BoxFit.cover, 
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                        'Trabajos',
-                        style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        ),
-                    ),
-                    ],
-                ),
-                ),
-                ),
-                InkWell(
-                onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => const CarsPage(title: 'Carros'),
-                    ),
-                );
-                },
-                child: Container(
-                height: 150, 
-                color: Colors.yellow.shade800,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Image.asset(
-                        'Marcas.png',
-                        width: MediaQuery.of(context).size.width, 
-                        height: 115, 
-                        fit: BoxFit.cover, 
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                        'Carros',
-                        style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        ),
-                    ),
-                    ],
-                ),
-                ),
-                ),
-                InkWell(
-                onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => const RemplacementsPage(title: 'Refacciones'),
-                    ),
-                );
-                },
-                child: Container(
-                height: 150, 
-                color: Colors.cyan.shade800,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Image.asset(
-                        'Taller.jpeg',
-                        width: MediaQuery.of(context).size.width, 
-                        height: 115, 
-                        fit: BoxFit.cover, 
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                        'Refacciones',
-                        style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        ),
-                    ),
-                    ],
-                ),
-                ),
-                ),
-            ],
-        ),
-        ),
-        floatingActionButton:Tooltip( 
-        message: 'Cerrar Sesión',
-            child: FloatingActionButton(
-        onPressed: () {
-            // Navegar a la página de inicio de sesión
-            Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => LoginPage(title: 'Login'),
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey.shade900,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                widget.title,
+                style: TextStyle(color: Colors.yellow.shade800),
+              ),
             ),
-            );
-        },
-        backgroundColor: Colors.blueGrey.shade900, // Color del fondo del botón flotante
-        elevation: 5.0, // Elevación de la sombra
-        child: Icon(Icons.login, color: Colors.yellow.shade800), // No es necesario usar const aquí
+          ],
         ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blueGrey.shade900,
+              ),
+              child: Text(
+                'Menú',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.garage), // Icono de Trabajos
+              title: Text('Trabajos'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const JobsPage(title: 'Trabajos'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.directions_car), // Icono de Carros
+              title: Text('Carros'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CarsPage(title: 'Carros'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.build), // Icono de Refacciones
+              title: Text('Refacciones'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const RemplacementPage(title: 'Refacciones'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.manage_accounts), // Icono de Cuenta
+              title: Text('Cuenta'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UsersPage(title: 'Cuenta'),
+                  ),
+                );
+              },
+            ),
+            Divider(), // Línea divisoria
+            ListTile(
+              leading: Icon(Icons.logout), // Icono para cerrar sesión
+              title: Text('Cerrar Sesión'),
+              onTap: () {
+                // Aquí puedes agregar lógica para cerrar sesión
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(title: 'Login'),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
+      ),
+      body: Center(
+        child: ListView(
+          padding: const EdgeInsets.all(8),
+          children: <Widget>[
+            // ... Tu contenido actual
+          ],
+        ),
+      ),
     );
-    }
+  }
 }

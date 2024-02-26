@@ -19,16 +19,16 @@ Future<List<Servicios>> fetchServicios() async {
   }
 }
 
-class ReparacionesPage extends StatefulWidget {
-  const ReparacionesPage({super.key, required this.title});
+class ServicesPage extends StatefulWidget {
+  const ServicesPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<ReparacionesPage> createState() => _ReparacionesPageState();
+  State<ServicesPage> createState() => _ServicesPageState();
 }
 
-class _ReparacionesPageState extends State<ReparacionesPage> {
+class _ServicesPageState extends State<ServicesPage> {
   late Future<List<Servicios>> futureServicios;
 
   @override
@@ -60,7 +60,7 @@ class _ReparacionesPageState extends State<ReparacionesPage> {
 
           // Filtrar la lista de servicios por Tipo "Servicio"
           List<Servicios> serviciosFiltrados = snapshot.data!
-              .where((servicio) => servicio.Tipo.toLowerCase() == 'reparacion')
+              .where((servicio) => servicio.Tipo.toLowerCase() == 'servicio')
               .toList();
 
           return ListView.builder(
@@ -68,9 +68,9 @@ class _ReparacionesPageState extends State<ReparacionesPage> {
             itemBuilder: (context, index) {
               final isEven = index.isEven;
               final cardColor =
-                  isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
-              final textColor =
                   isEven ? Colors.blueGrey.shade900 : Colors.yellow.shade800;
+              final textColor =
+                  isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
 
               return InkWell(
                 onTap: () {},
