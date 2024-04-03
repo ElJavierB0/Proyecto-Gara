@@ -50,6 +50,19 @@ class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> searchResults = [];
   List<Widget> carouselItems = [];
   String? _userName;
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    Icon(Icons.people),
+    Icon(Icons.add),
+    Icon(Icons.history),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   Future<void> search(String term) async {
     try {
@@ -488,98 +501,117 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Personas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Añadir',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'Historial',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.yellow.shade800,
+        onTap: _onItemTapped,
+      ),
     );
   }
-}
 
-void _handleResultTap(BuildContext context, dynamic result) {
-  if (result is Autos) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AutosPage(title: 'Autos'),
-      ),
-    );
-  } else if (result is Brand) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BrandPage(title: 'Marcas'),
-      ),
-    );
-  } else if (result is Category) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CategoryPage(title: 'Categorias'),
-      ),
-    );
-  } else if (result is Remplacement) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RemplacementPage(title: 'Refacciones'),
-      ),
-    );
-  } else if (result is Servicios) {
-    // Manejar los diferentes tipos de trabajo (servicios)
-    switch (result.Tipo) {
-      case 'servicio':
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ServicesPage(title: 'Servicios'),
-          ),
-        );
-        break;
-      case 'modificacion':
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ModificacionesPage(title: 'Modificaciones'),
-          ),
-        );
-        break;
-      case 'reparacion':
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ReparacionesPage(title: 'Reparaciones'),
-          ),
-        );
-        break;
-      default:
-        // Manejar cualquier otro caso si es necesario
-        break;
+  void _handleResultTap(BuildContext context, dynamic result) {
+    if (result is Autos) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AutosPage(title: 'Autos'),
+        ),
+      );
+    } else if (result is Brand) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BrandPage(title: 'Marcas'),
+        ),
+      );
+    } else if (result is Category) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CategoryPage(title: 'Categorias'),
+        ),
+      );
+    } else if (result is Remplacement) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RemplacementPage(title: 'Refacciones'),
+        ),
+      );
+    } else if (result is Servicios) {
+      // Manejar los diferentes tipos de trabajo (servicios)
+      switch (result.Tipo) {
+        case 'servicio':
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ServicesPage(title: 'Servicios'),
+            ),
+          );
+          break;
+        case 'modificacion':
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ModificacionesPage(title: 'Modificaciones'),
+            ),
+          );
+          break;
+        case 'reparacion':
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReparacionesPage(title: 'Reparaciones'),
+            ),
+          );
+          break;
+        default:
+          // Manejar cualquier otro caso si es necesario
+          break;
+      }
     }
   }
-}
 
-String getResultTitle(dynamic result) {
-  if (result is Autos) {
-    return 'Auto: ${result.Nombre}';
-  } else if (result is Brand) {
-    return 'Marca: ${result.Nombre}';
-  } else if (result is Category) {
-    return 'Categoría: ${result.Tipo}';
-  } else if (result is Remplacement) {
-    return 'Refacción: ${result.name}';
-  } else if (result is Servicios) {
-    // Identificar los tipos de trabajo (servicios)
-    String servicioTipo = '';
-    switch (result.Tipo) {
-      case 'servicio':
-        servicioTipo = 'Servicio';
-        break;
-      case 'modificacion':
-        servicioTipo = 'Modificación';
-        break;
-      case 'reparacion':
-        servicioTipo = 'Reparación';
-        break;
+  String getResultTitle(dynamic result) {
+    if (result is Autos) {
+      return 'Auto: ${result.Nombre}';
+    } else if (result is Brand) {
+      return 'Marca: ${result.Nombre}';
+    } else if (result is Category) {
+      return 'Categoría: ${result.Tipo}';
+    } else if (result is Remplacement) {
+      return 'Refacción: ${result.name}';
+    } else if (result is Servicios) {
+      // Identificar los tipos de trabajo (servicios)
+      String servicioTipo = '';
+      switch (result.Tipo) {
+        case 'servicio':
+          servicioTipo = 'Servicio';
+          break;
+        case 'modificacion':
+          servicioTipo = 'Modificación';
+          break;
+        case 'reparacion':
+          servicioTipo = 'Reparación';
+          break;
+      }
+      return '${result.Tipo}: ${result.Nombre}';
+    } else {
+      return '';
     }
-    return '${result.Tipo}: ${result.Nombre}';
-  } else {
-    return '';
   }
 }
