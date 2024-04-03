@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:proyecto/models/models.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
 import 'dart:convert';
+import 'Autos.dart';
+import 'Brand.dart';
+import 'Category.dart';
 import 'Car.dart';
-import 'Remplacement.dart';
 import 'Job.dart';
 import 'Login.dart';
+import 'Modificaciones.dart';
+import 'Remplacement.dart';
+import 'Reparaciones.dart';
+import 'Service.dart';
 import 'User.dart';
-import 'Auto.dart';
 
 void main() {
   runApp(MyApp());
@@ -43,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String lastSearch = '';
   List<dynamic> searchResults = [];
   List<Widget> carouselItems = [];
+  String? _userName;
 
   Future<void> search(String term) async {
     try {
@@ -173,6 +180,23 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     updateCarouselItems();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userProfile = prefs.getString('profile');
+    if (userProfile != null) {
+      Map<String, dynamic> profileData = jsonDecode(userProfile);
+      setState(() {
+        _userName = profileData['name'];
+      });
+    } else {
+      setState(() {
+        _userName =
+            ''; // o algún valor predeterminado si no hay perfil almacenado
+      });
+    }
   }
 
   Future<List<Servicios>> getRandomServices() async {
@@ -242,12 +266,25 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade900,
               ),
-              child: Text(
-                'Menú',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Menú',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Bienvenido, $_userName', // Aquí se muestra el nombre del usuario
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
               ),
             ),
             ListTile(
@@ -405,13 +442,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     return ListTile(
                       title: Text(getResultTitle(result)),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AutoPage(
-                                autoId: result.id, title: 'Detalles del Auto'),
-                          ),
-                        );
+                        _handleResultTap(context, result);
                       },
                     );
                   },
@@ -461,6 +492,69 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+void _handleResultTap(BuildContext context, dynamic result) {
+  if (result is Autos) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AutosPage(title: 'Autos'),
+      ),
+    );
+  } else if (result is Brand) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BrandPage(title: 'Marcas'),
+      ),
+    );
+  } else if (result is Category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoryPage(title: 'Categorias'),
+      ),
+    );
+  } else if (result is Remplacement) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RemplacementPage(title: 'Refacciones'),
+      ),
+    );
+  } else if (result is Servicios) {
+    // Manejar los diferentes tipos de trabajo (servicios)
+    switch (result.Tipo) {
+      case 'servicio':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ServicesPage(title: 'Servicios'),
+          ),
+        );
+        break;
+      case 'modificacion':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ModificacionesPage(title: 'Modificaciones'),
+          ),
+        );
+        break;
+      case 'reparacion':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReparacionesPage(title: 'Reparaciones'),
+          ),
+        );
+        break;
+      default:
+        // Manejar cualquier otro caso si es necesario
+        break;
+    }
+  }
+}
+
 String getResultTitle(dynamic result) {
   if (result is Autos) {
     return 'Auto: ${result.Nombre}';
@@ -471,7 +565,20 @@ String getResultTitle(dynamic result) {
   } else if (result is Remplacement) {
     return 'Refacción: ${result.name}';
   } else if (result is Servicios) {
-    return 'Servicio: ${result.Nombre}';
+    // Identificar los tipos de trabajo (servicios)
+    String servicioTipo = '';
+    switch (result.Tipo) {
+      case 'servicio':
+        servicioTipo = 'Servicio';
+        break;
+      case 'modificacion':
+        servicioTipo = 'Modificación';
+        break;
+      case 'reparacion':
+        servicioTipo = 'Reparación';
+        break;
+    }
+    return '${result.Tipo}: ${result.Nombre}';
   } else {
     return '';
   }

@@ -96,21 +96,33 @@ class _UsersPageState extends State<UsersPage> {
                   SizedBox(height: 16),
                   _editingMode
                       ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
                               onPressed: () {
                                 // Acción para guardar los cambios
                                 _toggleEditingMode();
                               },
-                              child: Text('Guardar'),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.blueGrey.shade900,
+                              ),
+                              child: Text(
+                                'Guardar',
+                                style: TextStyle(color: Colors.yellow.shade800),
+                              ),
                             ),
                             ElevatedButton(
                               onPressed: () {
                                 // Acción para cancelar la edición
                                 _toggleEditingMode();
                               },
-                              child: Text('Cancelar'),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.blueGrey.shade900,
+                              ),
+                              child: Text(
+                                'Cancelar',
+                                style: TextStyle(color: Colors.yellow.shade800),
+                              ),
                             ),
                           ],
                         )
@@ -119,9 +131,14 @@ class _UsersPageState extends State<UsersPage> {
                           children: [
                             ElevatedButton(
                               onPressed: _toggleEditingMode,
-                              child: Text('Editar'),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.blueGrey.shade900,
+                              ),
+                              child: Text(
+                                'Editar',
+                                style: TextStyle(color: Colors.yellow.shade800),
+                              ),
                             ),
-                            SizedBox(width: 16)
                           ],
                         ),
                 ],
