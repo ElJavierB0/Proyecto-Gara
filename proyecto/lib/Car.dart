@@ -30,7 +30,7 @@ class _CarsPageState extends State<CarsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CategoryPage(title: 'Catgorias'),
+                  builder: (context) => const CategoryPage(title: 'Categorias'),
                 ),
               );
             },

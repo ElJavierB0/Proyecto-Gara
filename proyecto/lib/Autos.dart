@@ -7,7 +7,8 @@ import 'dart:async';
 import 'dart:convert';
 
 Future<List<Autos>> fetchAutos() async {
-  final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/Cars'));
+  final response =
+      await http.get(Uri.parse('https://romo.terrabyteco.com/api/Cars'));
 
   if (response.statusCode == 200) {
     Iterable jsonResponse = jsonDecode(response.body);
@@ -20,8 +21,8 @@ Future<List<Autos>> fetchAutos() async {
 }
 
 Future<Brand> fetchBrand(int brandId) async {
-  final response =
-      await http.get(Uri.parse('http://127.0.0.1:8000/api/Brands/$brandId'));
+  final response = await http
+      .get(Uri.parse('https://romo.terrabyteco.com/api/Brands/$brandId'));
 
   if (response.statusCode == 200) {
     Map<String, dynamic> brandData = jsonDecode(response.body);

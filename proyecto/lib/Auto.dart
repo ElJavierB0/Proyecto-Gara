@@ -12,7 +12,7 @@ class AutoPage extends StatelessWidget {
 
   Future<Autos> fetchAutos(int id) async {
     final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/api/Cars/$id'));
+        await http.get(Uri.parse('https://romo.terrabyteco.com/api/Cars/$id'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> autosData = jsonDecode(response.body);
@@ -23,8 +23,8 @@ class AutoPage extends StatelessWidget {
   }
 
   Future<Brand> fetchBrand(int brandid) async {
-    final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/api/Brands/$brandid'));
+    final response = await http
+        .get(Uri.parse('https://romo.terrabyteco.com/api/Brands/$brandid'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> brandData = jsonDecode(response.body);
@@ -38,7 +38,33 @@ class AutoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles del Auto'),
+        backgroundColor: Colors.blueGrey.shade900,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: FutureBuilder<Autos>(
+                future: fetchAutos(autoId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  } else if (!snapshot.hasData) {
+                    return Text('No hay datos disponibles');
+                  }
+
+                  Autos selectedAuto = snapshot.data!;
+                  return Text(
+                    'Detalles de ${selectedAuto.Nombre}',
+                    style: TextStyle(color: Colors.yellow.shade800),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       body: FutureBuilder<Autos>(
         future: fetchAutos(autoId),
@@ -70,7 +96,7 @@ class AutoPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${selectedAuto.Nombre}',
+                        'Nombre: ${selectedAuto.Nombre}',
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -91,14 +117,14 @@ class AutoPage extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 8),
                                 Text(
-                                  '${selectedAuto.id}',
+                                  'Numero: ${selectedAuto.id}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 15,
                                   ),
                                 ),
                                 Text(
-                                  '${selectedAuto.Estado}',
+                                  'Estado: ${selectedAuto.Estado}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 15,
@@ -119,7 +145,7 @@ class AutoPage extends StatelessWidget {
                                         children: [
                                           const SizedBox(width: 8),
                                           Text(
-                                            'Carro: ${userSnapshot.data!.Nombre} ',
+                                            'Marca: ${userSnapshot.data!.Nombre} ',
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 14,

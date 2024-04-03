@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:proyecto/models/User.dart';
-
 import 'dart:async';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'Register.dart';
 import 'MyHomePage.dart';
 
-Future<List<Usuario>> fetchUsuarios() async {
-  final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/Users'));
+Future<Map<String, dynamic>> fetchInicios(String email, String password) async {
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/Login'),
+      body: {
+        'email': email,
+        'password': password,
+      },
+    );
 
-  if (response.statusCode == 200) {
-    Iterable jsonResponse = jsonDecode(response.body);
-    List<Usuario> usuarios =
-        jsonResponse.map((data) => Usuario.fromJson(data)).toList();
-    return usuarios;
-  } else {
-    throw Exception('Failed to load Usuarios');
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      return jsonResponse;
+    } else {
+      throw Exception(
+          'Failed to load Login. Status Code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error during fetchInicios: $e');
+    throw e;
   }
 }
 
@@ -129,38 +139,38 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> checkCredentials(String email, String password) async {
     try {
-      List<Usuario> usuarios = await fetchUsuarios();
+      print('Fetching Inicio...');
+      Map<String, dynamic> inicioData = await fetchInicios(email, password);
 
-      for (Usuario usuario in usuarios) {
-        if (usuario.Email == email && usuario.Password == password) {
-          if (usuario.Status == 3 && usuario.Nivel == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyHomePage(title: 'Inicio'),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Permiso denegado. Contacta al administrador.'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+      final accessToken = inicioData['access_token'];
+      final profile = inicioData['profile'];
 
-          return;
-        }
+      if (accessToken != null && profile != null) {
+        // Guarda el accessToken utilizando SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('accessToken', accessToken);
+        await prefs.setString('profile',
+            jsonEncode(profile)); // Guarda el perfil como una cadena JSON
+
+        // Procede con la lógica de autenticación exitosa
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MyHomePage(title: 'Inicio'),
+          ),
+        );
+        return;
+      } else {
+        // Manejar la respuesta si falta información o si el inicio de sesión falla
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Inicio no registrado. Regístrate para acceder.'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Usuario no registrado. Regístrate para acceder.'),
-          backgroundColor: Colors.red,
-        ),
-      );
     } catch (e) {
-      print('Error: $e');
+      print('Error during checkCredentials: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:

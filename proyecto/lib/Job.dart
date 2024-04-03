@@ -40,8 +40,8 @@ class _JobsPageState extends State<JobsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'Taller.jpeg',
+                  Image.network(
+                    'https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=600',
                     width: MediaQuery.of(context).size.width,
                     height: 115,
                     fit: BoxFit.cover,
@@ -74,8 +74,8 @@ class _JobsPageState extends State<JobsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'Marcas.png',
+                  Image.network(
+                    'https://images.pexels.com/photos/2244746/pexels-photo-2244746.jpeg?auto=compress&cs=tinysrgb&w=600',
                     width: MediaQuery.of(context).size.width,
                     height: 115,
                     fit: BoxFit.cover,
@@ -108,8 +108,8 @@ class _JobsPageState extends State<JobsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'Marcas.png',
+                  Image.network(
+                    'https://images.pexels.com/photos/4489766/pexels-photo-4489766.jpeg?auto=compress&cs=tinysrgb&w=600',
                     width: MediaQuery.of(context).size.width,
                     height: 115,
                     fit: BoxFit.cover,

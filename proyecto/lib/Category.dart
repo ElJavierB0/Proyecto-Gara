@@ -7,7 +7,7 @@ import 'dart:convert';
 
 Future<List<Category>> fetchCategories() async {
   final response =
-      await http.get(Uri.parse('http://127.0.0.1:8000/api/Categories'));
+      await http.get(Uri.parse('https://romo.terrabyteco.com/api/Categories'));
 
   if (response.statusCode == 200) {
     Iterable jsonResponse = jsonDecode(response.body);

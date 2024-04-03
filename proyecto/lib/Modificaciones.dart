@@ -7,7 +7,7 @@ import 'dart:convert';
 
 Future<List<Servicios>> fetchServicios() async {
   final response =
-      await http.get(Uri.parse('http://127.0.0.1:8000/api/Services'));
+      await http.get(Uri.parse('https://romo.terrabyteco.com/api/Services'));
 
   if (response.statusCode == 200) {
     Iterable jsonResponse = jsonDecode(response.body);
@@ -74,7 +74,69 @@ class _ModificacionesPageState extends State<ModificacionesPage> {
                   isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
 
               return InkWell(
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Center(
+                          child: Text("Detalles de la Modificación"),
+                        ),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.network(
+                                'https://images.pexels.com/photos/3846390/pexels-photo-3846390.jpeg?auto=compress&cs=tinysrgb&w=600',
+                                fit: BoxFit.cover,
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Id: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(serviciosFiltrados[index].id.toString()),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Nombre: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(serviciosFiltrados[index].Nombre),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Tipo: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(serviciosFiltrados[index].Tipo),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Lógica para cerrar el AlertDialog
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cerrar'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   padding: EdgeInsets.all(8.0),
@@ -87,58 +149,48 @@ class _ModificacionesPageState extends State<ModificacionesPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        'Taller.jpeg',
+                      Image.network(
+                        'https://images.pexels.com/photos/3846390/pexels-photo-3846390.jpeg?auto=compress&cs=tinysrgb&w=600',
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.cover,
                       ),
                       SizedBox(height: 8),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Id: ',
+                            'Id: ${serviciosFiltrados[index].id}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: textColor,
                             ),
-                          ),
-                          Text(
-                            '${serviciosFiltrados[index].id}',
-                            style: TextStyle(color: textColor),
                           ),
                         ],
                       ),
                       SizedBox(height: 8),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Nombre: ',
+                            'Nombre: ${serviciosFiltrados[index].Nombre}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: textColor,
                             ),
-                          ),
-                          Text(
-                            '${serviciosFiltrados[index].Nombre}',
-                            style: TextStyle(color: textColor),
                           ),
                         ],
                       ),
                       SizedBox(height: 8),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Tipo: ',
+                            'Tipo: ${serviciosFiltrados[index].Tipo}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: textColor,
                             ),
-                          ),
-                          Text(
-                            '${serviciosFiltrados[index].Tipo}',
-                            style: TextStyle(color: textColor),
                           ),
                         ],
                       ),

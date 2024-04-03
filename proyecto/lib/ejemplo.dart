@@ -1,290 +1,204 @@
-// import 'dart:async';
-// import 'dart:convert';
-
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'Register.dart';
+// import 'package:proyecto/models/Login.dart';
+// import 'User.dart'; // Importa Prueba.dart
 
-// Future<Album> fetchAlbum() async {
-//   final response = await http
-//       .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/2'));
+// class LoginPage extends StatefulWidget {
+//   const LoginPage({Key? key, required this.title}) : super(key: key);
 
-//   if (response.statusCode == 200) {
-//     // If the server did return a 200 OK response,
-//     // then parse the JSON.
-//     return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-//   } else {
-//     // If the server did not return a 200 OK response,
-//     // then throw an exception.
-//     throw Exception('Failed to load album');
-//   }
-// }
-
-// class Album {
-//   final int userId;
-//   final int id;
 //   final String title;
 
-//   const Album({
-//     required this.userId,
-//     required this.id,
-//     required this.title,
-//   });
-
-//   factory Album.fromJson(Map<String, dynamic> json) {
-//     return switch (json) {
-//       {
-//         'userId': int userId,
-//         'id': int id,
-//         'title': String title,
-//       } =>
-//         Album(
-//           userId: userId,
-//           id: id,
-//           title: title,
-//         ),
-//       _ => throw const FormatException('Failed to load album.'),
-//     };
-//   }
+//   @override
+//   State<LoginPage> createState() => _LoginPageState();
 // }
 
-// void main() => runApp(const MyApp());
+// class _LoginPageState extends State<LoginPage> {
+//   TextEditingController emailController = TextEditingController();
+//   TextEditingController passwordController = TextEditingController();
+//   bool isHovered = false;
 
-// class MyApp extends StatefulWidget {
-//   const MyApp({super.key});
+//   Future<void> loginUser(Inicio loginData) async {
+//     final String apiUrl = 'http://127.0.0.1:8000/api/Login';
 
-//   @override
-//   State<MyApp> createState() => _MyAppState();
-// }
-
-// class _MyAppState extends State<MyApp> {
-//   late Future<Album> futureAlbum;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     futureAlbum = fetchAlbum();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Obtener Datos',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-//       ),
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Obtener Datos'),
-//         ),
-//         body: Center(
-//           child: FutureBuilder<Album>(
-//             future: futureAlbum,
-//             builder: (context, snapshot) {
-//               if (snapshot.hasData) {
-//                 return Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Text(snapshot.data!.title),
-//                     Text(snapshot.data!.id.toString())
-//                   ],
-//                 );
-//               } else if (snapshot.hasError) {
-//                 return Text('${snapshot.error}');
-//               }
-
-//               // By default, show a loading spinner.
-//               return const CircularProgressIndicator();
-//             },
-//           ),
-//         ),
-//       ),
+//     final response = await http.post(
+//       Uri.parse(apiUrl),
+//       headers: {'Content-Type': 'application/json'},
+//       body: jsonEncode(loginData.toJson()),
 //     );
-//   }
-// }
 
-// import 'dart:async';
-// import 'dart:convert';
+//     if (response.statusCode == 200) {
+//       final responseData = jsonDecode(response.body);
 
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
+//       if (responseData['message'] == 'success') {
+//         // Guardar datos de sesión en SharedPreferences
+//         SharedPreferences prefs = await SharedPreferences.getInstance();
+//         prefs.setString('accessToken', responseData['access_token']);
+//         prefs.setString('profile', jsonEncode(responseData['profile']));
 
-// Future<Car> fetchCar() async {
-//   final response = await http
-//       .get(Uri.parse('http://127.0.0.1:8000/api/Services/5'));
-
-//   if (response.statusCode == 200) {
-//     // If the server did return a 200 OK response,
-//     // then parse the JSON.
-//     return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-//   } else {
-//     // If the server did not return a 200 OK response,
-//     // then throw an exception.
-//     throw Exception('Failed to load album');
-//   }
-// }
-
-// class Car {
-//   final String name;
-//   final String status;
-//   final String img;
-//   final int brand_id;
-
-//   const Car({
-//     required this.name,
-//     required this.status,
-//     required this.img,
-//     required this.brand_id,
-//   });
-
-//   factory Car.fromJson(Map<String, dynamic> json) {
-//     return switch (json) {
-//       {
-//         'Name': String name,
-//         'Status': String status,
-//         'Img': String img,
-//         'Brand': int brand_id,
-//       } =>
-//         Car(
-//           name: name,
-//           status: status,
-//           img: img,
-//           brand_id: brand_id,
-//         ),
-//       _ => throw const FormatException('Failed to load album.'),
-//     };
-//   }
-// }
-
-// void main() => runApp(const MyApp());
-
-// class MyApp extends StatefulWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   State<MyApp> createState() => _MyAppState();
-// }
-
-// class _MyAppState extends State<MyApp> {
-//   late Future<Car> futureCar;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     futureCar= fetchCar();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Obtener Datos',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-//       ),
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Obtener Datos'),
-//         ),
-//         body: Center(
-//           child: FutureBuilder<Car>(
-//             future: futureCar,
-//             builder: (context, snapshot) {
-//               if (snapshot.hasData) {
-//                 return Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Text(snapshot.data!.name),
-//                     Text(snapshot.data!.status)
-//                     Text(snapshot.data!.img)
-//                     Text(snapshot.data!.brand_id.toString())
-//                   ],
-//                 );
-//               } else if (snapshot.hasError) {
-//                 return Text('${snapshot.error}');
-//               }
-
-//               // By default, show a loading spinner.
-//               return const CircularProgressIndicator();
-//             },
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//             builder: (context) =>
+//                 const UsersPage(title: 'G-T'), // Cambia a PruebaPage
 //           ),
+//         );
+//       } else {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(
+//             content:
+//                 Text('Correo o contraseña incorrectos. Inténtalo de nuevo.'),
+//             backgroundColor: Colors.red,
+//           ),
+//         );
+//       }
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Error de conexión. Inténtalo de nuevo.'),
+//           backgroundColor: Colors.red,
 //         ),
-//       ),
-//     );
+//       );
+//     }
 //   }
-// }
 
-// class _RemplacementPageState extends State<RemplacementPage> {
-//   late Future<Remplacement> futureRemplacement;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     futureRemplacement = fetchRemplacement();
+//   Future<void> _login() async {
+//     try {
+//       await loginUser(Inicio(
+//         email: emailController.text,
+//         password: passwordController.text,
+//       ));
+//     } catch (e) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('$e'),
+//           backgroundColor: Colors.red,
+//         ),
+//       );
+//     }
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.blueGrey.shade900,
-//         title: Text(
-//           widget.title,
-//           style: TextStyle(color: Colors.yellow.shade800),
-//         ),
-//       ),
-//       body: Center(
-//         child: FutureBuilder<Remplacement>(
-//           future: futureRemplacement,
-//           builder: (context, snapshot) {
-//             if (snapshot.hasData) {
-//               return Card(
-//                 margin: EdgeInsets.all(16),
-//                 elevation: 5,
-//                 child: Column(
-//                   children: [
-//                     ClipRRect(
-//                       borderRadius: BorderRadius.only(
-//                         topLeft: Radius.circular(8),
-//                         topRight: Radius.circular(8),
-//                       ),
-//                       child: Image.asset(
-//                         'Taller.jpeg',
-//                         width: double.infinity,
-//                         height: 200,
-//                         fit: BoxFit.cover,
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.all(16),
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             snapshot.data!.name,
-//                             style: TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                           SizedBox(height: 8),
-//                           Text(
-//                             snapshot.data!.type,
-//                             style: TextStyle(
-//                               fontSize: 16,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ],
+//       body: Padding(
+//         padding: EdgeInsets.fromLTRB(16.0, 80.0, 16.0, 16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: <Widget>[
+//             Image.asset(
+//               'assets/servicios.jpg',
+//               height: 100,
+//             ),
+//             SizedBox(height: 32),
+//             Text(
+//               '¡Bienvenido de nuevo!',
+//               style: TextStyle(
+//                 fontSize: 30,
+//                 fontWeight: FontWeight.bold,
+//                 color: Colors.black,
+//                 fontFamily: 'Poppins-Bold',
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             Text(
+//               'Nos alegra verte de nuevo en ConectaPro. Ingresa tus datos para continuar.',
+//               style: TextStyle(
+//                 fontSize: 16,
+//                 color: Colors.grey[600],
+//                 fontFamily: 'Poppins-Regular',
+//               ),
+//             ),
+//             SizedBox(height: 32),
+//             TextField(
+//               controller: emailController,
+//               decoration: InputDecoration(
+//                 prefixIcon: Icon(Icons.mail_outline, size: 20),
+//                 labelText: 'Correo electrónico',
+//                 labelStyle: TextStyle(color: Colors.grey[400]),
+//                 enabledBorder: OutlineInputBorder(
+//                   borderSide: BorderSide(color: Colors.grey[400]!),
+//                   borderRadius: BorderRadius.circular(12.0),
 //                 ),
-//               );
-//             } else if (snapshot.hasError) {
-//               return Text('${snapshot.error}');
-//             }
-
-//             return const CircularProgressIndicator();
-//           },
+//                 focusedBorder: OutlineInputBorder(
+//                   borderSide: BorderSide(color: Colors.black),
+//                   borderRadius: BorderRadius.circular(12.0),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             TextField(
+//               controller: passwordController,
+//               obscureText: true,
+//               decoration: InputDecoration(
+//                 prefixIcon: Icon(Icons.lock_outline, size: 20),
+//                 labelText: 'Contraseña',
+//                 labelStyle: TextStyle(color: Colors.grey[400]),
+//                 enabledBorder: OutlineInputBorder(
+//                   borderSide: BorderSide(color: Colors.grey[400]!),
+//                   borderRadius: BorderRadius.circular(12.0),
+//                 ),
+//                 focusedBorder: OutlineInputBorder(
+//                   borderSide: BorderSide(color: Colors.black),
+//                   borderRadius: BorderRadius.circular(12.0),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(height: 32),
+//             ElevatedButton(
+//               onPressed: _login,
+//               style: ButtonStyle(
+//                 backgroundColor: MaterialStateProperty.all(Colors.black),
+//                 padding: MaterialStateProperty.all(
+//                     EdgeInsets.symmetric(horizontal: 30, vertical: 30)),
+//                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(8),
+//                 )),
+//               ),
+//               child: Container(
+//                 width: double.infinity,
+//                 alignment: Alignment.center,
+//                 child: Text(
+//                   'Iniciar sesión',
+//                   style: TextStyle(
+//                       fontSize: 15,
+//                       color: Colors.white,
+//                       fontFamily: 'Poppins-Bold'),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             InkWell(
+//               onTap: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => const RegisterPage(title: 'Registro'),
+//                   ),
+//                 );
+//               },
+//               child: AnimatedContainer(
+//                 duration: Duration(milliseconds: 300),
+//                 width: double.infinity,
+//                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+//                 decoration: BoxDecoration(
+//                   border: Border.all(color: Colors.grey[400]!),
+//                   borderRadius: BorderRadius.circular(8),
+//                   color: isHovered ? Colors.black : Colors.transparent,
+//                 ),
+//                 child: Text(
+//                   '¿No tienes una cuenta? Registrate',
+//                   style: TextStyle(
+//                       fontSize: 15,
+//                       color: isHovered ? Colors.white : Colors.grey[600],
+//                       fontFamily: 'Poppins-Regular'),
+//                   textAlign: TextAlign.center,
+//                 ),
+//               ),
+//             ),
+//           ],
 //         ),
 //       ),
 //     );
