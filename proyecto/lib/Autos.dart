@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'Auto.dart';
 import 'package:proyecto/models/Autos.dart';
 import 'package:proyecto/models/Brand.dart';
 import 'dart:async';
@@ -82,14 +81,48 @@ class _AutosPageState extends State<AutosPage> {
 
               return InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AutoPage(
-                        autoId: snapshot.data![index].id,
-                        title: widget.title,
-                      ),
-                    ),
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      final auto = snapshot.data![index];
+                      return AlertDialog(
+                        title: Text('Detalles del Auto'),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Id: ${auto.id}'),
+                            Text('Nombre: ${auto.Nombre}'),
+                            Text('Estado: ${auto.Estado}'),
+                            FutureBuilder<Brand>(
+                              future: fetchBrand(auto.Marca),
+                              builder: (context, brandSnapshot) {
+                                if (brandSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (brandSnapshot.hasError) {
+                                  return Text(
+                                    '${brandSnapshot.error}',
+                                  );
+                                } else {
+                                  return Text(
+                                    'Marca: ${brandSnapshot.data!.Nombre}',
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cerrar'),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
                 child: Container(
@@ -105,7 +138,7 @@ class _AutosPageState extends State<AutosPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'Taller.jpeg',
+                        'Autos.png',
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.cover,

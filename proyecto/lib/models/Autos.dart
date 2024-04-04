@@ -28,7 +28,7 @@ class Autos {
             Estado: Estado,
             Imagen: Imagen,
             Marca: Marca),
-      _ => throw const FormatException('Failed to load album.'),
+      _ => throw const FormatException('Failed to load Autos.'),
     };
   }
 }

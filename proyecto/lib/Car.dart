@@ -41,7 +41,7 @@ class _CarsPageState extends State<CarsPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'Taller.jpeg',
+                    'Categorias.png',
                     width: MediaQuery.of(context).size.width,
                     height: 115,
                     fit: BoxFit.cover,
@@ -107,7 +107,7 @@ class _CarsPageState extends State<CarsPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'Marcas.png',
+                    'Autos.png',
                     width: MediaQuery.of(context).size.width,
                     height: 115,
                     fit: BoxFit.cover,

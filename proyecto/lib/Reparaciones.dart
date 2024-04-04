@@ -121,6 +121,16 @@ class _ReparacionesPageState extends State<ReparacionesPage> {
                                   Text(serviciosFiltrados[index].Tipo),
                                 ],
                               ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Descripcion: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(serviciosFiltrados[index].Descripcion),
+                                ],
+                              ),
                               SizedBox(height: 8),
                               ElevatedButton(
                                 onPressed: () {

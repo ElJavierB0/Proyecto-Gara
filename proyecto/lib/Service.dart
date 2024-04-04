@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:proyecto/models/Service.dart';
-// import 'Servi.dart';
 
 import 'dart:async';
 import 'dart:convert';
@@ -120,6 +119,16 @@ class _ServicesPageState extends State<ServicesPage> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(serviciosFiltrados[index].Tipo),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Descripción: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(serviciosFiltrados[index].Descripcion),
                                 ],
                               ),
                               SizedBox(height: 8),

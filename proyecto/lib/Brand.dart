@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:proyecto/models/Brand.dart';
 import 'package:proyecto/models/Category.dart';
-import 'Autos.dart';
+import 'Marca.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -85,7 +85,10 @@ class _BrandPageState extends State<BrandPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const AutosPage(title: 'Autos'),
+                      builder: (context) => MarcaPage(
+                        title: 'Autos de ${snapshot.data![index].Nombre}',
+                        Marca: snapshot.data![index].id,
+                      ),
                     ),
                   );
                 },
@@ -102,7 +105,7 @@ class _BrandPageState extends State<BrandPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'Taller.jpeg',
+                        'Marcas.png',
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.cover,

@@ -4,6 +4,7 @@ import 'package:proyecto/models/Category.dart';
 
 import 'dart:async';
 import 'dart:convert';
+import 'Categoria.dart';
 
 Future<List<Category>> fetchCategories() async {
   final response =
@@ -61,8 +62,20 @@ class _CategoryPageState extends State<CategoryPage> {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
+              final category = snapshot.data![index];
+
               return InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CategoriaPage(
+                        title: 'Marcas estilo ${category.Tipo}',
+                        Categoria: category.id,
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   padding: EdgeInsets.all(8.0),
@@ -76,7 +89,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'Taller.jpeg',
+                        'Categorias.png',
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.cover,
@@ -86,7 +99,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Id: ${snapshot.data![index].id}',
+                            'Id: ${category.id}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -97,8 +110,8 @@ class _CategoryPageState extends State<CategoryPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(snapshot.data![index].Tipo),
-                          Text(snapshot.data![index].Detalles),
+                          Text(category.Tipo),
+                          Text(category.Detalles),
                         ],
                       ),
                     ],

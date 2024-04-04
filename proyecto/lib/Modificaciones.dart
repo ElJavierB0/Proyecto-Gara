@@ -122,6 +122,16 @@ class _ModificacionesPageState extends State<ModificacionesPage> {
                                   Text(serviciosFiltrados[index].Tipo),
                                 ],
                               ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Descripcion: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(serviciosFiltrados[index].Descripcion),
+                                ],
+                              ),
                               SizedBox(height: 8),
                               ElevatedButton(
                                 onPressed: () {

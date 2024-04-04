@@ -136,31 +136,6 @@ class _RemplacementPageState extends State<RemplacementPage> {
                                     },
                                     child: Text('Cerrar'),
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Muestra un nuevo AlertDialog indicando que se ha agregado el producto
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Producto agregado'),
-                                            content: Text(
-                                                'El producto se ha agregado correctamente.'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Cierra el nuevo AlertDialog
-                                                },
-                                                child: Text('Aceptar'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Text('Agregar'),
-                                  ),
                                 ],
                               ),
                             ],
@@ -183,7 +158,7 @@ class _RemplacementPageState extends State<RemplacementPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'Taller.jpeg',
+                        'Piezas.png',
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.cover,

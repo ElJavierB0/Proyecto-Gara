@@ -10,9 +10,12 @@ import 'Autos.dart';
 import 'Brand.dart';
 import 'Category.dart';
 import 'Car.dart';
+import 'Historial.dart';
 import 'Job.dart';
 import 'Login.dart';
 import 'Modificaciones.dart';
+import 'Persona.dart';
+import 'Record.dart';
 import 'Remplacement.dart';
 import 'Reparaciones.dart';
 import 'Service.dart';
@@ -518,7 +521,44 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.yellow.shade800,
-        onTap: _onItemTapped,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          // Aquí redirige a la vista correspondiente según el índice seleccionado
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PersonaPage(
+                      title: 'Usuarios'), // Reemplaza con tu página de personas
+                ),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordsPage(
+                      title: 'Registro'), // Reemplaza con tu página de añadir
+                ),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HistorialPage(
+                      title:
+                          'Historial'), // Reemplaza con tu página de historial
+                ),
+              );
+              break;
+            default:
+              break;
+          }
+        },
       ),
     );
   }
