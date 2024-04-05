@@ -53,12 +53,12 @@ class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> searchResults = [];
   List<Widget> carouselItems = [];
   String? _userName;
-  int _selectedIndex = 0;
+  int? _selectedIndex;
 
   static const List<Widget> _widgetOptions = <Widget>[
     Icon(Icons.people),
-    Icon(Icons.add),
-    Icon(Icons.history),
+    Icon(Icons.post_add),
+    Icon(Icons.home),
   ];
 
   void _onItemTapped(int index) {
@@ -120,6 +120,20 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       print('Error during search: $e');
     }
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    // Eliminar los datos de sesión de SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('accessToken');
+    prefs.remove('profile');
+    // Redirigir a LoginPage después de cerrar sesión
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(title: 'Gara'),
+      ),
+    );
   }
 
   Future<List<Autos>> fetchAutos(String term) async {
@@ -294,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Bienvenido, $_userName', // Aquí se muestra el nombre del usuario
+                    'Bienvenido $_userName', // Aquí se muestra el nombre del usuario
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -357,12 +371,8 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: Icon(Icons.logout),
               title: Text('Cerrar Sesión'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(title: 'Login'),
-                  ),
-                );
+                _logout(
+                    context); // Llama a la función _logout y pasa el contexto
               },
             ),
           ],
@@ -508,10 +518,10 @@ class _MyHomePageState extends State<MyHomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            label: 'Personas',
+            label: 'Usuarios',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.post_add),
             label: 'Añadir',
           ),
           BottomNavigationBarItem(
@@ -519,7 +529,7 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Historial',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: _selectedIndex ?? 0,
         selectedItemColor: Colors.yellow.shade800,
         onTap: (int index) {
           setState(() {

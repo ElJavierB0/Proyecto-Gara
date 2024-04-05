@@ -56,18 +56,20 @@ class _AutosPageState extends State<AutosPage> {
         title: Text(
           widget.title,
           style: TextStyle(
-              color: Colors.yellow.shade800, fontWeight: FontWeight.bold),
+            color: Colors.yellow.shade800,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: FutureBuilder<List<Autos>>(
         future: futureAutos,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
+            return Center(child: Text('${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Text('No hay datos disponibles');
+            return Center(child: Text('No hay datos disponibles'));
           }
 
           return ListView.builder(
@@ -101,13 +103,10 @@ class _AutosPageState extends State<AutosPage> {
                                     ConnectionState.waiting) {
                                   return CircularProgressIndicator();
                                 } else if (brandSnapshot.hasError) {
-                                  return Text(
-                                    '${brandSnapshot.error}',
-                                  );
+                                  return Text('${brandSnapshot.error}');
                                 } else {
                                   return Text(
-                                    'Marca: ${brandSnapshot.data!.Nombre}',
-                                  );
+                                      'Marca: ${brandSnapshot.data!.Nombre}');
                                 }
                               },
                             ),
@@ -128,7 +127,10 @@ class _AutosPageState extends State<AutosPage> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   padding: EdgeInsets.all(8.0),
-                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
                   decoration: BoxDecoration(
                     color: cardColor,
                     borderRadius: BorderRadius.circular(10.0),
@@ -169,10 +171,8 @@ class _AutosPageState extends State<AutosPage> {
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
                               } else if (brandsSnapshot.hasError) {
-                                return Text(
-                                  '${brandsSnapshot.error}',
-                                  style: TextStyle(color: textColor),
-                                );
+                                return Text('${brandsSnapshot.error}',
+                                    style: TextStyle(color: textColor));
                               } else {
                                 return Row(
                                   children: [

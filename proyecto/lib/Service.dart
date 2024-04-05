@@ -168,12 +168,20 @@ class _ServicesPageState extends State<ServicesPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Id: ${serviciosFiltrados[index].id}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Id: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${serviciosFiltrados[index].id}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -181,25 +189,35 @@ class _ServicesPageState extends State<ServicesPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Nombre: ${serviciosFiltrados[index].Nombre}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Nombre: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${serviciosFiltrados[index].Nombre}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Tipo: ${serviciosFiltrados[index].Tipo}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Tipo: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${serviciosFiltrados[index].Tipo}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
                           ),
                         ],
                       ),

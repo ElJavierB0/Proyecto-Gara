@@ -61,6 +61,11 @@ class _RemplacementPageState extends State<RemplacementPage> {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
+              final isEven = index.isEven;
+              final cardColor =
+                  isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
+              final textColor =
+                  isEven ? Colors.blueGrey.shade900 : Colors.yellow.shade800;
               return InkWell(
                 onTap: () {
                   showDialog(
@@ -150,7 +155,7 @@ class _RemplacementPageState extends State<RemplacementPage> {
                   padding: EdgeInsets.all(8.0),
                   margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.yellow.shade800,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Column(
@@ -167,11 +172,20 @@ class _RemplacementPageState extends State<RemplacementPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Id: ${snapshot.data![index].id}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Id: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].id}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -179,8 +193,36 @@ class _RemplacementPageState extends State<RemplacementPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(snapshot.data![index].name),
-                          Text(snapshot.data![index].type),
+                          Row(
+                            children: [
+                              Text(
+                                'Nombre: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].name}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Tipo: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].type}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],

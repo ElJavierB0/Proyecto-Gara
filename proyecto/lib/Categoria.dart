@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:proyecto/MyHomePage.dart';
+import 'package:proyecto/Persona.dart';
+import 'package:proyecto/Record.dart';
 import 'dart:convert';
 import 'package:proyecto/models/Brand.dart';
+import 'Marca.dart';
 
 class CategoriaPage extends StatefulWidget {
   const CategoriaPage({Key? key, required this.title, required this.Categoria})
@@ -17,6 +21,7 @@ class CategoriaPage extends StatefulWidget {
 class _CategoriaPageState extends State<CategoriaPage> {
   late List<Brand> brands;
   bool loading = true;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -72,6 +77,17 @@ class _CategoriaPageState extends State<CategoriaPage> {
                     isEven ? Colors.blueGrey.shade900 : Colors.yellow.shade800;
 
                 return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MarcaPage(
+                          title: 'Autos de ${brand.Nombre}',
+                          Marca: brand.id,
+                        ),
+                      ),
+                    );
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.8,
                     padding: EdgeInsets.all(8.0),
@@ -129,6 +145,57 @@ class _CategoriaPageState extends State<CategoriaPage> {
                 );
               },
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Usuarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.post_add),
+            label: 'Añadir',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.yellow.shade800,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PersonaPage(title: 'Usuarios'),
+                ),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyHomePage(title: 'Inicio'),
+                ),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordsPage(title: 'Realizar Pedido'),
+                ),
+              );
+              break;
+            default:
+              break;
+          }
+        },
+      ),
     );
   }
 }

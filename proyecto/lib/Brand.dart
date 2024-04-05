@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:proyecto/MyHomePage.dart';
+import 'package:proyecto/Persona.dart';
+import 'package:proyecto/Record.dart';
 import 'package:proyecto/models/Brand.dart';
 import 'package:proyecto/models/Category.dart';
 import 'Marca.dart';
@@ -42,6 +45,7 @@ class BrandPage extends StatefulWidget {
 
 class _BrandPageState extends State<BrandPage> {
   late Future<List<Brand>> futureBrands;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -76,9 +80,9 @@ class _BrandPageState extends State<BrandPage> {
             itemBuilder: (context, index) {
               final isEven = index.isEven;
               final cardColor =
-                  isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
-              final textColor =
                   isEven ? Colors.blueGrey.shade900 : Colors.yellow.shade800;
+              final textColor =
+                  isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
 
               return InkWell(
                 onTap: () {
@@ -183,6 +187,57 @@ class _BrandPageState extends State<BrandPage> {
               );
             },
           );
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Usuarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.post_add),
+            label: 'Añadir',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.yellow.shade800,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PersonaPage(title: 'Usuarios'),
+                ),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyHomePage(title: 'Inicio'),
+                ),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordsPage(title: 'Realizar Pedido'),
+                ),
+              );
+              break;
+            default:
+              break;
+          }
         },
       ),
     );

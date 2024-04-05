@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:proyecto/models/Category.dart';
+import 'package:proyecto/MyHomePage.dart';
+import 'package:proyecto/Persona.dart';
+import 'package:proyecto/Record.dart';
 
 import 'dart:async';
 import 'dart:convert';
@@ -31,6 +34,7 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   late Future<List<Category>> futureCategories;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -63,6 +67,11 @@ class _CategoryPageState extends State<CategoryPage> {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final category = snapshot.data![index];
+              final isEven = index.isEven;
+              final cardColor =
+                  isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
+              final textColor =
+                  isEven ? Colors.blueGrey.shade900 : Colors.yellow.shade800;
 
               return InkWell(
                 onTap: () {
@@ -81,7 +90,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   padding: EdgeInsets.all(8.0),
                   margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.yellow.shade800,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Column(
@@ -98,11 +107,20 @@ class _CategoryPageState extends State<CategoryPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Id: ${category.id}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Id: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${category.id}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -110,8 +128,25 @@ class _CategoryPageState extends State<CategoryPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(category.Tipo),
-                          Text(category.Detalles),
+                          Row(
+                            children: [
+                              Text(
+                                'Tipo: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${category.Tipo}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            '${category.Detalles}',
+                            style: TextStyle(color: textColor),
+                          ),
                         ],
                       ),
                     ],
@@ -120,6 +155,57 @@ class _CategoryPageState extends State<CategoryPage> {
               );
             },
           );
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Usuarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.post_add),
+            label: 'Añadir',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.yellow.shade800,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PersonaPage(title: 'Usuarios'),
+                ),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyHomePage(title: 'Inicio'),
+                ),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordsPage(title: 'Realizar Pedido'),
+                ),
+              );
+              break;
+            default:
+              break;
+          }
         },
       ),
     );
