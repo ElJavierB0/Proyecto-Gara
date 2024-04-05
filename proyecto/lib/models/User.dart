@@ -4,10 +4,8 @@ class Usuario {
   final String Apellido;
   final String Email;
   final String Celular;
-  final String Password;
-  final int Status;
-  final int Nivel;
-  final String Imagen;
+  final dynamic Status; // Cambiado a dynamic
+  final dynamic Nivel; // Cambiado a dynamic
 
   const Usuario({
     required this.id,
@@ -15,10 +13,8 @@ class Usuario {
     required this.Apellido,
     required this.Email,
     required this.Celular,
-    required this.Password,
     required this.Status,
     required this.Nivel,
-    required this.Imagen,
   });
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
@@ -28,10 +24,9 @@ class Usuario {
       Apellido: json['Apellido'] as String,
       Email: json['Email'] as String,
       Celular: json['Celular'] as String,
-      Password: json['Password'] as String,
-      Status: json['Status'] as int,
-      Nivel: json['Nivel'] as int,
-      Imagen: json['Imagen'] as String,
+      Status:
+          int.tryParse(json['Status'].toString()), // Intenta convertir a int
+      Nivel: int.tryParse(json['Nivel'].toString()), // Intenta convertir a int
     );
   }
 }

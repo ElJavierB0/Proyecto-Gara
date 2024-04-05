@@ -1,206 +1,319 @@
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'Register.dart';
-// import 'package:proyecto/models/Login.dart';
-// import 'User.dart'; // Importa Prueba.dart
+import 'package:flutter/material.dart';
+import 'package:proyecto/models/User.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-// class LoginPage extends StatefulWidget {
-//   const LoginPage({Key? key, required this.title}) : super(key: key);
+Future<List<Usuario>> fetchUsuarios() async {
+  final response =
+      await http.get(Uri.parse('https://romo.terrabyteco.com/api/Users'));
 
-//   final String title;
+  if (response.statusCode == 200) {
+    Iterable jsonResponse = jsonDecode(response.body);
+    List<Usuario> remplacements =
+        jsonResponse.map((data) => Usuario.fromJson(data)).toList();
+    return remplacements;
+  } else {
+    throw Exception('Failed to load Remplacements');
+  }
+}
 
-//   @override
-//   State<LoginPage> createState() => _LoginPageState();
-// }
+class PersonaPage extends StatefulWidget {
+  const PersonaPage({Key? key, required this.title}) : super(key: key);
 
-// class _LoginPageState extends State<LoginPage> {
-//   TextEditingController emailController = TextEditingController();
-//   TextEditingController passwordController = TextEditingController();
-//   bool isHovered = false;
+  final String title;
 
-//   Future<void> loginUser(Inicio loginData) async {
-//     final String apiUrl = 'http://127.0.0.1:8000/api/Login';
+  @override
+  State<PersonaPage> createState() => _PersonaPageState();
+}
 
-//     final response = await http.post(
-//       Uri.parse(apiUrl),
-//       headers: {'Content-Type': 'application/json'},
-//       body: jsonEncode(loginData.toJson()),
-//     );
+class _PersonaPageState extends State<PersonaPage> {
+  late Future<List<Usuario>> futureUsuarios;
 
-//     if (response.statusCode == 200) {
-//       final responseData = jsonDecode(response.body);
+  @override
+  void initState() {
+    super.initState();
+    futureUsuarios = fetchUsuarios();
+  }
 
-//       if (responseData['message'] == 'success') {
-//         // Guardar datos de sesión en SharedPreferences
-//         SharedPreferences prefs = await SharedPreferences.getInstance();
-//         prefs.setString('accessToken', responseData['access_token']);
-//         prefs.setString('profile', jsonEncode(responseData['profile']));
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey.shade900, // Color del fondo
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Colors.yellow.shade800), // Color del texto
+        ),
+      ),
+      body: FutureBuilder<List<Usuario>>(
+        future: futureUsuarios,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Text('No hay datos disponibles');
+          }
 
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) =>
-//                 const UsersPage(title: 'G-T'), // Cambia a PruebaPage
-//           ),
-//         );
-//       } else {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//             content:
-//                 Text('Correo o contraseña incorrectos. Inténtalo de nuevo.'),
-//             backgroundColor: Colors.red,
-//           ),
-//         );
-//       }
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: Text('Error de conexión. Inténtalo de nuevo.'),
-//           backgroundColor: Colors.red,
-//         ),
-//       );
-//     }
-//   }
-
-//   Future<void> _login() async {
-//     try {
-//       await loginUser(Inicio(
-//         email: emailController.text,
-//         password: passwordController.text,
-//       ));
-//     } catch (e) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: Text('$e'),
-//           backgroundColor: Colors.red,
-//         ),
-//       );
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Padding(
-//         padding: EdgeInsets.fromLTRB(16.0, 80.0, 16.0, 16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: <Widget>[
-//             Image.asset(
-//               'assets/servicios.jpg',
-//               height: 100,
-//             ),
-//             SizedBox(height: 32),
-//             Text(
-//               '¡Bienvenido de nuevo!',
-//               style: TextStyle(
-//                 fontSize: 30,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//                 fontFamily: 'Poppins-Bold',
-//               ),
-//             ),
-//             SizedBox(height: 16),
-//             Text(
-//               'Nos alegra verte de nuevo en ConectaPro. Ingresa tus datos para continuar.',
-//               style: TextStyle(
-//                 fontSize: 16,
-//                 color: Colors.grey[600],
-//                 fontFamily: 'Poppins-Regular',
-//               ),
-//             ),
-//             SizedBox(height: 32),
-//             TextField(
-//               controller: emailController,
-//               decoration: InputDecoration(
-//                 prefixIcon: Icon(Icons.mail_outline, size: 20),
-//                 labelText: 'Correo electrónico',
-//                 labelStyle: TextStyle(color: Colors.grey[400]),
-//                 enabledBorder: OutlineInputBorder(
-//                   borderSide: BorderSide(color: Colors.grey[400]!),
-//                   borderRadius: BorderRadius.circular(12.0),
-//                 ),
-//                 focusedBorder: OutlineInputBorder(
-//                   borderSide: BorderSide(color: Colors.black),
-//                   borderRadius: BorderRadius.circular(12.0),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 16),
-//             TextField(
-//               controller: passwordController,
-//               obscureText: true,
-//               decoration: InputDecoration(
-//                 prefixIcon: Icon(Icons.lock_outline, size: 20),
-//                 labelText: 'Contraseña',
-//                 labelStyle: TextStyle(color: Colors.grey[400]),
-//                 enabledBorder: OutlineInputBorder(
-//                   borderSide: BorderSide(color: Colors.grey[400]!),
-//                   borderRadius: BorderRadius.circular(12.0),
-//                 ),
-//                 focusedBorder: OutlineInputBorder(
-//                   borderSide: BorderSide(color: Colors.black),
-//                   borderRadius: BorderRadius.circular(12.0),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 32),
-//             ElevatedButton(
-//               onPressed: _login,
-//               style: ButtonStyle(
-//                 backgroundColor: MaterialStateProperty.all(Colors.black),
-//                 padding: MaterialStateProperty.all(
-//                     EdgeInsets.symmetric(horizontal: 30, vertical: 30)),
-//                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(8),
-//                 )),
-//               ),
-//               child: Container(
-//                 width: double.infinity,
-//                 alignment: Alignment.center,
-//                 child: Text(
-//                   'Iniciar sesión',
-//                   style: TextStyle(
-//                       fontSize: 15,
-//                       color: Colors.white,
-//                       fontFamily: 'Poppins-Bold'),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 16),
-//             InkWell(
-//               onTap: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => const RegisterPage(title: 'Registro'),
-//                   ),
-//                 );
-//               },
-//               child: AnimatedContainer(
-//                 duration: Duration(milliseconds: 300),
-//                 width: double.infinity,
-//                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-//                 decoration: BoxDecoration(
-//                   border: Border.all(color: Colors.grey[400]!),
-//                   borderRadius: BorderRadius.circular(8),
-//                   color: isHovered ? Colors.black : Colors.transparent,
-//                 ),
-//                 child: Text(
-//                   '¿No tienes una cuenta? Registrate',
-//                   style: TextStyle(
-//                       fontSize: 15,
-//                       color: isHovered ? Colors.white : Colors.grey[600],
-//                       fontFamily: 'Poppins-Regular'),
-//                   textAlign: TextAlign.center,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              final isEven = index.isEven;
+              final cardColor =
+                  isEven ? Colors.yellow.shade800 : Colors.blueGrey.shade900;
+              final textColor =
+                  isEven ? Colors.blueGrey.shade900 : Colors.yellow.shade800;
+              return InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Center(
+                          child: Text("Detalles de Remplacements"),
+                        ),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                'Taller.jpeg',
+                                fit: BoxFit.cover,
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Id: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(snapshot.data![index].id.toString()),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Nombre: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '${snapshot.data![index].Nombre} ${snapshot.data![index].Apellido}',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Email: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(snapshot.data![index].Email),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Celular: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(snapshot.data![index].Celular),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Status: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(snapshot.data![index].Status.toString()),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Nivel: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(snapshot.data![index].Nivel.toString()),
+                                ],
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Lógica para cerrar el AlertDialog
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cerrar'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  padding: EdgeInsets.all(8.0),
+                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'Piezas.png',
+                        width: double.infinity,
+                        height: 150.0,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Id: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].id}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Nombre: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].Nombre} ${snapshot.data![index].Apellido}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Email: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].Email}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Celular: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].Celular}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Status: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].Status}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Nivel: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                '${snapshot.data![index].Nivel}',
+                                style: TextStyle(color: textColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}

@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:proyecto/MyHomePage.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Register.dart';
-import 'Login.dart';
-import 'package:proyecto/models/Login.dart';
-import 'User.dart'; // Importa Users.dart
+// Importa Users.dart
 
 class UsersPage extends StatefulWidget {
   const UsersPage({Key? key, required this.title}) : super(key: key);
@@ -58,16 +53,6 @@ class _UsersPageState extends State<UsersPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Primera fila con la imagen del usuario
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: CircleAvatar(
-              radius: 50,
-              // Aquí cargas la imagen del usuario desde la URL proporcionada por la base de datos
-              backgroundImage: NetworkImage(_profileData['Imagen'] ?? ''),
-            ),
-          ),
-          // Segunda fila con los datos y botones
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
